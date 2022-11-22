@@ -294,7 +294,7 @@ def start_game():
     print(t_block)
     print("")
     print("="*10)
-    if question_load_game != "y" or question_load_game != "Y":
+    if question_load_game == "n" or question_load_game == "N":
         labyrinth_one.spawn_monsters(rows, columns)
     labyrinth_one.show_matrix_hidden() # ----> Testing
     print("-"*5) # ----> Testing
