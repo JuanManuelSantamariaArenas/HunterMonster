@@ -281,46 +281,19 @@ def start_game():
         labyrinth_one.hunter_attack(rows, columns)
         labyrinth_one.move_monsters(rows, columns)
         labyrinth_one.show_matrix_hidden()
+        print("-"*5) # ----> Testing
         labyrinth_one.show_matrix_public()
         win = labyrinth_one.hunted_monsters(rows, columns)
         if win:
+            print("CONGRATULATIONS YOU HAVE HUNTED ALL THE MONSTERS")
             break
         else:
             # for i in immobilized_monsters:
             pass
         Attempts -= 1
         print(f"THE HUNTER HAS {Attempts} ATTEMPTS")
-
-    """
-    labyrinth_one.show_added_monsters_list()    # ------> Show added monsters list
-    print("="*10)
-    print("")
-    """
-    """
-    labyrinth_one.show_matrix_hidden()  # ----> Hidden and Testing  # ------> Hunter Attack
-    print("-"*20) # -----> Testing
-    labyrinth_one.show_matrix_public()  # ----> Public and Testing
-    print("="*10)
-    labyrinth_one.hunter_attack(rows, columns)
-    labyrinth_one.show_matrix_hidden() # ----> Hidden and Testing
-    print("-"*20)
-    labyrinth_one.show_matrix_public() # ----> Public and Testing
-    print("="*10)
-    labyrinth_one.hunter_attack(rows, columns) # ----> Testing
-    labyrinth_one.show_matrix_hidden() # ----> Hidden and Testing
-    print("-"*20)
-    labyrinth_one.show_matrix_public() # ----> Public and Testing
-    """
-    """
-    labyrinth_one.show_matrix_hidden()  # ----> Hidden and Testing # ------> Move monsters
-    print("-"*20) # -----> Testing
-    labyrinth_one.show_matrix_public()  # ----> Public and Testing
-    print("="*10)
-    labyrinth_one.move_monsters(rows, columns)
-    labyrinth_one.show_matrix_hidden()  # ----> Hidden and Testing
-    print("-"*20) # -----> Testing
-    labyrinth_one.show_matrix_public()  # ----> Public and Testing
-    print("="*10)
-    """
+        if Attempts == 0:
+            print("GAME OVER YOU'RE OUT OF TRIES")
+            
     return
 start_game()
