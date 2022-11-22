@@ -154,16 +154,17 @@ class Labyrinth:
 
     def move_monsters(self, rows, columns):
         list_monster_movement = [] 
+        immobilized_monsters = ["","",""]
         for i in range(0, rows):
             for j in range(0, columns):
                 if self.matrix_hidden[i][j] != " " and self.matrix_hidden[i][j].symbol != "🛡️":
                     monster_check = self.matrix_hidden[i][j]
                     list_monster_movement.append(monster_check)
                     check_monster = modules.list_monster_movement_check(list_monster_movement, monster_check)
-                    print(check_monster)
+                    # print(check_monster)
                     if check_monster == False:
                         if self.matrix_hidden[i][j].symbol == "🦁":
-                            print(f"Exist monster lion: ({i}, {j})")
+                            # print(f"Exist monster lion: ({i}, {j})")
                             jump_monster = self.matrix_hidden[i][j].jump
                             coordinates_horizontal_movement = modules.coordinates_horizontal_movement(i, j, jump_monster)
                             coordinates_vertical_movement = modules.coordinates_vertical_movement(i, j, jump_monster)
@@ -174,12 +175,15 @@ class Labyrinth:
                             monster_movement_coordinates = coordinates_horizontal_movement + coordinates_vertical_movement
                             if len(monster_movement_coordinates) > 0:
                                 new_coordinates_monster = random.choice(monster_movement_coordinates)
-                                print(f"Movement: " + str(new_coordinates_monster)) # ----> Testing
+                                # print(f"Movement: " + str(new_coordinates_monster)) # ----> Testing
                                 current_coordinates_monster = (i, j)
                                 monster_movement_labyrinth = self.matrix_hidden[i][j]
                                 modules.monster_movement(self, monster_movement_labyrinth, current_coordinates_monster, new_coordinates_monster)
+                                immobilized_monsters[0] = False
+                            else:
+                                immobilized_monsters[0] = True
                         elif self.matrix_hidden[i][j].symbol == "🐵":
-                            print(f"Exist monster monkey: ({i}, {j})")
+                            # print(f"Exist monster monkey: ({i}, {j})")
                             jump_monster = self.matrix_hidden[i][j].jump
                             coordinates_horizontal_movement = modules.coordinates_horizontal_movement(i, j, jump_monster)
                             coordinates_vertical_movement = modules.coordinates_vertical_movement(i, j, jump_monster)
@@ -193,12 +197,15 @@ class Labyrinth:
                             monster_movement_coordinates = coordinates_horizontal_movement + coordinates_vertical_movement + coordinates_diagonal_movement
                             if len(monster_movement_coordinates) > 0:
                                 new_coordinates_monster = random.choice(monster_movement_coordinates)
-                                print(f"Movement: " + str(new_coordinates_monster))
+                                # print(f"Movement: " + str(new_coordinates_monster))
                                 current_coordinates_monster = (i, j)
                                 monster_movement_labyrinth = self.matrix_hidden[i][j]
-                                modules.monster_movement(self, monster_movement_labyrinth, current_coordinates_monster, new_coordinates_monster)                
+                                modules.monster_movement(self, monster_movement_labyrinth, current_coordinates_monster, new_coordinates_monster)
+                                immobilized_monsters[1] = False
+                            else:
+                                immobilized_monsters[1] = True
                         elif self.matrix_hidden[i][j].symbol == "🐼":
-                            print(f"Exist monster panda: ({i}, {j})")
+                            # print(f"Exist monster panda: ({i}, {j})")
                             jump_monster = self.matrix_hidden[i][j].jump
                             coordinates_diagonal_movement = modules.coordinates_diagonal_movement(i, j, jump_monster)
                             coordinates_diagonal_movement = modules.coordinates_movement_labyrinth(rows, columns, coordinates_diagonal_movement)
@@ -206,13 +213,28 @@ class Labyrinth:
                             monster_movement_coordinates = coordinates_diagonal_movement
                             if len(monster_movement_coordinates) > 0:
                                 new_coordinates_monster = random.choice(monster_movement_coordinates)
-                                print(f"Movement: " + str(new_coordinates_monster))
+                                # print(f"Movement: " + str(new_coordinates_monster))
                                 current_coordinates_monster = (i, j)
                                 monster_movement_labyrinth = self.matrix_hidden[i][j]
-                                modules.monster_movement(self, monster_movement_labyrinth, current_coordinates_monster, new_coordinates_monster)  
+                                modules.monster_movement(self, monster_movement_labyrinth, current_coordinates_monster, new_coordinates_monster)
+                                immobilized_monsters[2] = False  
+                            else:
+                                immobilized_monsters[2] = True
                 else:
-                    print(f"There is no monster: ({i}, {j})")
-        return self.matrix_hidden, self.matrix_public
+                    # print(f"There is no monster: ({i}, {j})")
+                    pass
+        return self.matrix_hidden, self.matrix_public, immobilized_monsters
+
+    def hunted_monsters(self, rows, columns):
+        monster = 0
+        for i in range(0, rows):
+            for j in range(0, columns):
+                if self.matrix_hidden[i][j] != " " and self.matrix_hidden[i][j].symbol != "🛡️":
+                    monster += 1
+        if monster == 0:
+            return True
+        elif monster > 0:
+            return False
 
 def start_game():
     # print("🪓🏹")
@@ -249,6 +271,26 @@ def start_game():
     print("")
     print("="*10)
     labyrinth_one.spawn_monsters(rows, columns)
+    labyrinth_one.show_matrix_hidden() # ----> Testing
+    print("-"*5) # ----> Testing
+    labyrinth_one.show_matrix_public() # ----> Testing
+    print("="*10)
+    Attempts = random.randrange(8, 13)
+    print(f"\nTHE HUNTER HAS {Attempts} ATTEMPTS")
+    while Attempts > 0:
+        labyrinth_one.hunter_attack(rows, columns)
+        labyrinth_one.move_monsters(rows, columns)
+        labyrinth_one.show_matrix_hidden()
+        labyrinth_one.show_matrix_public()
+        win = labyrinth_one.hunted_monsters(rows, columns)
+        if win:
+            break
+        else:
+            # for i in immobilized_monsters:
+            pass
+        Attempts -= 1
+        print(f"THE HUNTER HAS {Attempts} ATTEMPTS")
+
     """
     labyrinth_one.show_added_monsters_list()    # ------> Show added monsters list
     print("="*10)
@@ -269,7 +311,7 @@ def start_game():
     print("-"*20)
     labyrinth_one.show_matrix_public() # ----> Public and Testing
     """
-    
+    """
     labyrinth_one.show_matrix_hidden()  # ----> Hidden and Testing # ------> Move monsters
     print("-"*20) # -----> Testing
     labyrinth_one.show_matrix_public()  # ----> Public and Testing
@@ -279,6 +321,6 @@ def start_game():
     print("-"*20) # -----> Testing
     labyrinth_one.show_matrix_public()  # ----> Public and Testing
     print("="*10)
-    
+    """
     return
 start_game()

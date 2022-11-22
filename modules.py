@@ -97,7 +97,7 @@ def hunter_attack_tool(self, coordinate_attack, tool_used):
             life_monster_current = self.matrix_hidden[hunter_coordinate_attack[0]][hunter_coordinate_attack[1]].life
             # print(f"{self.matrix_hidden[hunter_coordinate_attack[0]][hunter_coordinate_attack[1]].life}") # -----> Testing
             print(f"\nYOU INJURED A {object_coordinate.symbol} WITH A {hunter_tool_used.symbol}, PAST LIFE: {life_monster} AND CURRENT LIFE: {life_monster_current}\n")
-            if self.matrix_hidden[hunter_coordinate_attack[0]][hunter_coordinate_attack[1]].life == 0:
+            if self.matrix_hidden[hunter_coordinate_attack[0]][hunter_coordinate_attack[1]].life <= 0:
                 self.matrix_hidden[hunter_coordinate_attack[0]][hunter_coordinate_attack[1]] = " "
                 self.matrix_public[hunter_coordinate_attack[0]][hunter_coordinate_attack[1]] = " "
                 print(f"\nYOU MURDERED A {object_coordinate.symbol} WITH A {hunter_tool_used.symbol}\n")

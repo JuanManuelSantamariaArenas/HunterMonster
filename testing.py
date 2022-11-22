@@ -281,6 +281,7 @@ def start_game():
         labyrinth_one.hunter_attack(rows, columns)
         labyrinth_one.move_monsters(rows, columns)
         labyrinth_one.show_matrix_hidden()
+        print("-"*5) # ----> Testing
         labyrinth_one.show_matrix_public()
         win = labyrinth_one.hunted_monsters(rows, columns)
         if win:
