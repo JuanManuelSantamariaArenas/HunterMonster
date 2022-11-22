@@ -220,3 +220,6 @@ def list_monster_movement_check(list_monster_movement, monster):
             return False
     else:
         return
+
+def rows_and_column_load(self):
+    pass

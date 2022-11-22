@@ -1,5 +1,6 @@
 import random
 import modules
+import pickle
 
 class Monster:
 
@@ -80,6 +81,7 @@ class Labyrinth:
         self.matrix_hidden = []
         self.matrix_public = []
         self.added_monsters_list = {}
+        self.rows_and_columns = []
     
     def fill_array(self, rows, columns):
         for i in range(0, rows):
@@ -89,7 +91,8 @@ class Labyrinth:
             for j in range(0, columns):
                 self.matrix_hidden[i][j] = " "
                 self.matrix_public[i][j] = " "
-        return self.matrix_hidden, self.matrix_public
+        self.rows_and_columns = [rows, columns]
+        return self.matrix_hidden, self.matrix_public, self.rows_and_columns
     
     def show_matrix_hidden(self):
         for i in self.matrix_hidden:
@@ -236,20 +239,41 @@ class Labyrinth:
         elif monster > 0:
             return False
 
+    def save_game(self):
+        with open("record.txt", "wb") as file:
+            pickle.dump(self, file)
+    
+    def load_game(self):
+        with open("record.txt", "rb") as file:
+            past_labyrinth = pickle.load(file)
+            self.matrix_hidden = past_labyrinth.matrix_hidden
+            self.matrix_public = past_labyrinth.matrix_public
+            rows_and_colomns = past_labyrinth.rows_and_columns
+        return rows_and_colomns
+
 def start_game():
     # print("🪓🏹")
     print("🏹"*5 + "🪓"*5 + "⚔️"*5 + "🛡️"*5)
     print("WELCOME TO HUNTER MONSTERS\n")
     labyrinth_one = Labyrinth() 
-    rows = int(input("Enter the # of rows: "))
-    columns = int(input("Enter the # of columns: "))
-    # rows = random.randrange(5, 21)
-    # columns = random.randrange(5, 11)
-    print("="*10)
-    labyrinth_one.fill_array(rows, columns)
+    question_load_game = input("DO YOU WANT TO LOAD THE LAST GAME?, (y/n): ")
+    if question_load_game == "y" or question_load_game == "Y":
+        load_labyrinth = labyrinth_one.load_game()
+        rows = load_labyrinth[0]
+        columns = load_labyrinth[1]
+        print("\nTHE GAME WAS LOADED SUCCESSFULLY\n")
+    elif question_load_game == "n" or question_load_game == "N":
+        print("\nWE START THE GAME, DO YOUR BEST!\n")
+        # rows = int(input("Enter the # of rows: "))
+        # columns = int(input("Enter the # of columns: "))
+        rows = random.randrange(5, 21)
+        columns = random.randrange(5, 11)
+        print("="*10)
+        labyrinth_one.fill_array(rows, columns)
     print(f"\nTHE LABYRINTH OF THE GAME ({rows} x {columns})\n")
     labyrinth_one.show_matrix_hidden()
-    # labyrinth_one.show_matrix_public() # ----> Add
+    print("-"*10) # ----> Testing
+    labyrinth_one.show_matrix_public() # ----> Testing
     print("")
     print("="*10)
     m_clover = CloverMonster()
@@ -270,7 +294,8 @@ def start_game():
     print(t_block)
     print("")
     print("="*10)
-    labyrinth_one.spawn_monsters(rows, columns)
+    if question_load_game != "y" or question_load_game != "Y":
+        labyrinth_one.spawn_monsters(rows, columns)
     labyrinth_one.show_matrix_hidden() # ----> Testing
     print("-"*5) # ----> Testing
     labyrinth_one.show_matrix_public() # ----> Testing
@@ -285,15 +310,22 @@ def start_game():
         labyrinth_one.show_matrix_public()
         win = labyrinth_one.hunted_monsters(rows, columns)
         if win:
-            print("CONGRATULATIONS YOU HAVE HUNTED ALL THE MONSTERS")
+            print("\nCONGRATULATIONS YOU HAVE HUNTED ALL THE MONSTERS\n")
             break
         else:
             # for i in immobilized_monsters:
-            pass
-        Attempts -= 1
-        print(f"THE HUNTER HAS {Attempts} ATTEMPTS")
+            Attempts -= 1
+            print(f"\nTHE HUNTER HAS {Attempts} ATTEMPTS\n")
         if Attempts == 0:
-            print("GAME OVER YOU'RE OUT OF TRIES")
-            
+            print("\nGAME OVER YOU'RE OUT OF TRIES\n")
+        else: 
+            if Attempts == 3:                
+                question_save_game = input("\nDO YOU WANT TO SAVE THE CURRENT GAME?, (y/n): ")
+                if question_save_game == "y" or question_save_game == "Y":
+                    labyrinth_one.save_game()
+                    print("\nTHE GAME WAS SAVED SUCCESSFULLY\n")
+                    break
+                elif question_save_game == "n" or question_save_game == "N":
+                    print("\nBE ALERT YOU HAVE 3 ATTEMPTS LEFT\n")
     return
 start_game()
