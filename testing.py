@@ -285,6 +285,7 @@ def start_game():
         labyrinth_one.show_matrix_public()
         win = labyrinth_one.hunted_monsters(rows, columns)
         if win:
+            print("CONGRATULATIONS YOU HAVE HUNTED ALL THE MONSTERS")
             break
         else:
             # for i in immobilized_monsters:
